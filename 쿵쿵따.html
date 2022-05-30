@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="쿵쿵따.css" />
+  </head>
+  <body>
+    <div class="bigbox">
+      <h1>쿵쿵따리쿵쿵따~</h1>
+      <div>순서: <span id="order">1</span></div>
+      <div>제시어: <span id="word"></span></div>
+      <input type="text" />
+      <button>입력</button>
+    </div>
+    <script>
+      const member = prompt("몇명입니까?");
+      $input = document.querySelector("input");
+      $button = document.querySelector("button");
+      $word = document.querySelector("#word");
+      $order = document.querySelector("#order");
+      let word;
+      let newWord;
+
+      const onclickBtn = () => {
+        if (!word) {
+          // 제시어가 없다면
+          word = newWord;
+          if (word.length === 3) {
+            $word.textContent = word;
+            const order = Number($order.textContent);
+            if ($order.textContent + 1 === member) {
+              $order.textContent = 1;
+            } else {
+              $order.textContent = order + 1;
+            }
+          } else {
+            alert("3글자를 입력하시오!");
+          }
+        } else {
+          // 제시어가 있을경우
+          if (word[2] === newWord[0] && newWord.length === 3) {
+            word = newWord;
+            $word.textContent = word;
+            const order = Number($order.textContent);
+            if ($order.textContent + 1 === member) {
+              $order.textContent = 1;
+            } else {
+              $order.textContent = order + 1;
+            }
+          } else {
+            alert("3글자 그리고 끝말이 같은 단어를 쓰시오.");
+          }
+        }
+        $input.value = "";
+        $input.focus();
+      };
+      const onInput = (event) => {
+        newWord = event.target.value;
+      };
+
+      $input.addEventListener("input", onInput);
+      $button.addEventListener("click", onclickBtn);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+  <form id="form">
+    <input type="text" id="input">
+		<button>확인</button>
+  </form>
+	<div id="logs"></div>
+	<script>
+		const $input = document.querySelector('#input');
+		const $form = document.querySelector('#form');
+		const $logs = document.querySelector('#logs');
+		
+		const numbers = [];
+		for (let n = 0; n < 10; n++){
+			numbers.push(n+1)
+		} 
+		const answer = [];
+		for (let n = 0; n < 4; n+=1){
+			const index = Math.floor(Math.random() * numbers.length)//0~8
+			answer.push(numbers[index]);
+			numbers.splice(index,1);
+		}
+		const tries = [];
+		function checkInput(input) {
+			if(input.length !== 4){
+				return alert('4가지 숫자를 입력하라고');
+			}
+			if(new Set(input).size !== 4){ // new Set(숫자).size "중복제거" 여기서 length가 아니라 size를 사용
+				return alert('중복 안되게 입력하라고');
+			}
+			if(tries.includes(input)){
+				return alert('이미 시도한 값이잖아;;');
+			}
+			return true;
+		}
+
+		$form.addEventListener('submit', (event) => {
+			event.preventDefault();
+			const value = $input.value;
+			$input.value = '';
+			if(!checkInput(value)){ 
+				return;
+			}
+			if(answer.join('') === value){
+				$logs.textContent = 'homeRun';
+				return;
+			}
+			if(tries.length >= 9){
+				const message = document.createTextNode(`패배! 정답은 ${answer.join('')}`);
+				$logs.append(message);
+				return;
+			}
+			// 몇스트라이크 몇볼인지 검사
+			let strike = 0;
+			let ball = 0;
+			let out = 0;
+
+			// answer: 3146 value: 1236
+			for(let i = 0; i < answer.length; i++){
+				const index = value.indexOf(answer[i]);
+				if(index > -1){
+					if(index === i){
+						strike += 1;
+					} else {
+						ball += 1;
+					}
+				}
+			}
+			if(ball === 0 && strike === 0){
+				$logs.append(`${value}: 아웃!`, document.createElement('br'));
+				tries.push(value); 
+				out += 1;
+			} else{
+					$logs.append(`${value}: ${ball}볼 ${strike}스트라이크`, document.createElement('br'));
+					tries.push(value); 
+			}
+			if(out === 3){
+				$logs.append(`${value}: 아웃!`, document.createElement('br'));
+				const message = document.createTextNode(`패배! 정답은 ${answer.join('')}`);
+				$logs.appendChild(message);
+				return;
+			}
+			tries.push(value)
+		});
+		</script>
+</body>
+</html>
